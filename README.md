@@ -1,5 +1,4 @@
 # webIDE
-[![webIDE Screenshot](https://github.com/mad-skull/webIDE/blob/master/.github/screenshot.png?raw=true)](https://ide.judge0.com/?7U55)
 
 
 ## About
