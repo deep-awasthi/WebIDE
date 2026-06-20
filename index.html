@@ -1,228 +1,179 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="description" content="Free and open-source online code editor that allows you to write and execute code from a rich set of languages.">
-    <meta name="keywords" content="online editor, online code editor, online ide, online compiler, online interpreter, run code online, learn programming online,
-            online debugger, programming in browser, online code runner, online code execution, debug online, debug C code online, debug C++ code online,
-            programming online, snippet, snippets, code snippet, code snippets, pastebin, execute code, programming in browser, run c online, run C++ online,
-            run java online, run python online, run ruby online, run c# online, run rust online, run pascal online, run basic online">
-    <meta name="author" content="Deep Awasthi">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta property="og:title" content="webIDE">
-    <meta property="og:description" content="Free and open-source online code editor that allows you to write and execute code from a rich set of languages.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/judge0/ide/master/.github/wallpaper.png">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/goldenlayout.min.js" integrity="sha256-NhJAZDfGgv4PiB+GVlSrPdh3uc75XXYSM4su8hgTchI=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/css/goldenlayout-base.css" integrity="sha256-oIDR18yKFZtfjCJfDsJYpTBv1S9QmxYopeqw2dO96xM=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/golden-layout/1.5.9/css/goldenlayout-dark-theme.css" integrity="sha256-ygw8PvSDJJUGLf6Q9KIQsYR3mOmiQNlDaxMLDOx9xL0=" crossorigin="anonymous" />
-
-    <script>
-        var require = {
-            paths: {
-                "vs": "https://unpkg.com/monaco-editor/min/vs",
-                "monaco-vim": "https://unpkg.com/monaco-vim/dist/monaco-vim",
-                "monaco-emacs": "https://unpkg.com/monaco-emacs/dist/monaco-emacs"
-            }
-        };
-    </script>
-    <script src="https://unpkg.com/monaco-editor/min/vs/loader.js"></script>
-    <script src="https://unpkg.com/monaco-editor@0.23.0/min/vs/editor/editor.main.nls.js"></script>
-    <script src="https://unpkg.com/monaco-editor@0.23.0/min/vs/editor/editor.main.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js" integrity="sha256-t8GepnyPmw9t+foMh3mKNvcorqNHamSKtKRxxpUEgFI=" crossorigin="anonymous"></script>
-
-    <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
-
-    <script type="text/javascript" src="third_party/download.js"></script>
-
-    <script type="text/javascript" src="js/ide.js"></script>
-
-    <link type="text/css" rel="stylesheet" href="css/ide.css">
-
-    <title>webIDE</title>
-    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RHNJ50BJ2F"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-RHNJ50BJ2F');
-    </script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Java IDE - Online Compiler</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="A minimal, fast, and feature-rich Java IDE. Compile and execute Java code online with custom inputs, multi-file support, and full Monaco Editor integration.">
+  <meta name="keywords" content="Java IDE, Online Java Compiler, Java IDE Online, Monaco Editor Java, GFG Java compiler">
+  
+  <!-- CSS Library -->
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.40.0/min/vs/editor/editor.main.min.css">
+  <link rel="stylesheet" href="index.css">
 </head>
-
 <body>
-    <div id="site-navigation" class="ui small inverted menu">
-        <div id="site-header" class="header item">
-            <a href="https://github.com/mad-skull/WebIDE">
-                <img id="site-icon" src="./images/judge0_icon.png">
-                <h2>webIDE</h2>
-            </a>
-        </div>
-        <div class="left menu">
-            <div class="ui dropdown item site-links on-hover">
-                File <i class="dropdown icon"></i>
-                <div class="menu">
-                    <a class="item" target="_blank" href="/"><i class="file code icon"></i> New File</a>
-                    <div class="item" onclick="downloadSource()"><i class="download icon"></i> Download</div>
-                    <div id="insert-template-btn" class="item"><i class="file code outline icon"></i> Insert template
-                        for current language</div>
-                </div>
-            </div>
-            <div class="link item" onclick="$('#site-settings').modal('show')"><i class="cog icon"></i> Settings</div>
-            <div class="item borderless">
-                <select id="select-language" class="ui dropdown">
-                    <option value="45" mode="UNKNOWN">Assembly (NASM 2.14.02)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="46" mode="shell">Bash (5.0.0)</option>
-                    <option value="47" mode="UNKNOWN">Basic (FBC 1.07.1)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="1011" mode="UNKNOWN">Bosque (latest)</option>  <!-- Unknown mode. Help needed. -->
-                    <option value="75" mode="c">C (Clang 7.0.1)</option>
-                    <option value="1013" mode="c">C (Clang 9.0.1)</option>
-                    <option value="1001" mode="c">C (Clang 10.0.1)</option>
-                    <option value="48" mode="c">C (GCC 7.4.0)</option>
-                    <option value="49" mode="c">C (GCC 8.3.0)</option>
-                    <option value="50" mode="c">C (GCC 9.2.0)</option>
-                    <option value="51" mode="csharp">C# (Mono 6.6.0.161)</option>
-                    <option value="1022" mode="csharp">C# (Mono 6.10.0.104)</option>
-                    <option value="1021" mode="csharp">C# (.NET Core SDK 3.1.302)</option>
-                    <option value="1023" mode="csharp">C# Test (.NET Core SDK 3.1.302, NUnit 3.12.0)</option>
-                    <option value="76" mode="cpp">C++ (Clang 7.0.1)</option>
-                    <option value="1014" mode="cpp">C++ (Clang 9.0.1)</option>
-                    <option value="1002" mode="cpp">C++ (Clang 10.0.1)</option>
-                    <option value="52" mode="cpp">C++ (GCC 7.4.0)</option>
-                    <option value="53" mode="cpp">C++ (GCC 8.3.0)</option>
-                    <option value="54" mode="cpp">C++ (GCC 9.2.0)</option>
-                    <option value="1015" mode="cpp">C++ Test (Clang 10.0.1, Google Test 1.8.1)</option>
-                    <option value="1012" mode="cpp">C++ Test (GCC 8.4.0, Google Test 1.8.1)</option>
-                    <option value="1003" mode="c">C3 (latest)</option> <!-- Replacement mode. Help needed. -->
-                    <option value="86" mode="clojure">Clojure (1.10.1)</option>
-                    <option value="77" mode="UNKNOWN">COBOL (GnuCOBOL 2.2)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="55" mode="UNKNOWN">Common Lisp (SBCL 2.0.0)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="56" mode="UNKNOWN">D (DMD 2.089.1)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="57" mode="UNKNOWN">Elixir (1.9.4)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="58" mode="UNKNOWN">Erlang (OTP 22.2)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="44" mode="plaintext">Executable</option>
-                    <option value="87" mode="fsharp">F# (.NET Core SDK 3.1.202)</option>
-                    <option value="1024" mode="fsharp">F# (.NET Core SDK 3.1.302)</option>
-                    <option value="59" mode="UNKNOWN">Fortran (GFortran 9.2.0)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="60" mode="go">Go (1.13.5)</option>
-                    <option value="88" mode="UNKNOWN">Groovy (3.0.3)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="61" mode="UNKNOWN">Haskell (GHC 8.8.1)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="62" mode="java">Java (OpenJDK 13.0.1)</option>
-                    <option value="1004" mode="java">Java (OpenJDK 14.0.1)</option>
-                    <option value="1005" mode="java">Java Test (OpenJDK 14.0.1, JUnit Platform Console Standalone 1.6.2)</option>
-                    <option value="63" mode="javascript">JavaScript (Node.js 12.14.0)</option>
-                    <option value="78" mode="kotlin">Kotlin (1.3.70)</option>
-                    <option value="64" mode="lua">Lua (5.3.5)</option>
-                    <option value="1006" mode="c">MPI (OpenRTE 3.1.3) with C (GCC 8.3.0)</option>
-                    <option value="1007" mode="cpp">MPI (OpenRTE 3.1.3) with C++ (GCC 8.3.0)</option>
-                    <option value="1008" mode="python">MPI (OpenRTE 3.1.3) with Python (3.7.3)</option>
-                    <option value="1009" mode="python">Nim (stable)</option> <!-- Replacement mode. Help needed. -->
-                    <option value="79" mode="objective-c">Objective-C (Clang 7.0.1)</option>
-                    <option value="65" mode="UNKNOWN">OCaml (4.09.0)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="66" mode="UNKNOWN">Octave (5.1.0)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="67" mode="pascal">Pascal (FPC 3.0.4)</option>
-                    <option value="85" mode="perl">Perl (5.28.1)</option>
-                    <option value="68" mode="php">PHP (7.4.1)</option>
-                    <option value="43" mode="plaintext">Plain Text</option>
-                    <option value="69" mode="UNKNOWN">Prolog (GNU Prolog 1.4.5)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="70" mode="python">Python (2.7.17)</option>
-                    <option value="71" mode="python">Python (3.8.1)</option>
-                    <option value="1010" mode="python">Python for ML (3.7.3)</option>
-                    <option value="80" mode="r">R (4.0.0)</option>
-                    <option value="72" mode="ruby">Ruby (2.7.0)</option>
-                    <option value="73" mode="rust">Rust (1.40.0)</option>
-                    <option value="81" mode="UNKNOWN">Scala (2.13.2)</option> <!-- Unknown mode. Help needed. -->
-                    <option value="82" mode="sql">SQL (SQLite 3.27.2)</option>
-                    <option value="83" mode="swift">Swift (5.2.3)</option>
-                    <option value="74" mode="typescript">TypeScript (3.7.4)</option>
-                    <option value="84" mode="vb">Visual Basic.Net (vbnc 0.0.0.5943)</option> <!-- (vbnc 0.0.0.5943) -->
-                </select>
-            </div>
-            <div class="item fitted borderless wide screen only">
-                <div class="ui input">
-                    <input id="compiler-options" type="text" placeholder="Compiler options"></input>
-                </div>
-            </div>
-            <div class="item borderless wide screen only">
-                <div class="ui input">
-                    <input id="command-line-arguments" type="text" placeholder="Command line arguments"></input>
-                </div>
-            </div>
-            <div class="item no-left-padding borderless">
-                <button id="run-btn" class="ui primary labeled icon button"><i class="play icon"></i>Run</button>
-            </div>
-            <div id="navigation-message" class="item borderless">
-                <span class="navigation-message-text"></span>
-            </div>
-        </div>
-        </div>
-    </div>
 
-    <div id="site-content"></div>
+  <div class="app-container">
+    
+    <!-- Top Minimal Navigation Header -->
+    <header class="ide-header">
+      <div class="brand">
+        <i data-lucide="terminal" class="logo-icon"></i>
+        <h1 class="brand-name">Java IDE</h1>
+        <span class="brand-badge">Online</span>
+      </div>
+      
+      <div class="header-controls">
+        <!-- Main Class Selection -->
+        <div class="control-wrapper">
+          <label for="main-class-dropdown" class="control-label">Main Class</label>
+          <select id="main-class-dropdown" class="header-select">
+            <!-- Programmatically rendered -->
+          </select>
+        </div>
 
-    <div id="site-modal" class="ui modal">
-        <div class="header">
-            <i class="close icon"></i>
-            <span id="title"></span>
+        <!-- Connection Indicator -->
+        <div class="status-group">
+          <div id="connection-indicator" class="status-indicator" title="Wandbox Engine Active"></div>
         </div>
-        <div class="scrolling content"></div>
-        <div class="actions">
-            <div class="ui small labeled icon cancel button">
-                <i class="remove icon"></i>
-                Close (ESC)
-            </div>
-        </div>
-    </div>
 
-    <div id="site-settings" class="ui modal">
-        <i class="close icon"></i>
-        <div class="header">
-            <i class="cog icon"></i>
-            Settings
+        <!-- Actions Run / Stop -->
+        <div class="actions-group">
+          <button id="run-code-btn" class="run-btn">
+            <i data-lucide="play"></i>
+            <span>Run Code</span>
+          </button>
+          <button id="stop-code-btn" class="stop-btn">
+            <i data-lucide="square"></i>
+            <span>Cancel</span>
+          </button>
         </div>
-        <div class="content">
-            <div class="ui form">
-                <div class="inline fields">
-                    <label>Editor Mode</label>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="editor-mode" value="normal" checked="checked">
-                            <label>Normal</label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="editor-mode" value="vim">
-                            <label>Vim</label>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" name="editor-mode" value="emacs">
-                            <label>Emacs</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="inline field">
-                    <div class="ui checkbox">
-                        <input type="checkbox" name="redirect-output">
-                        <label>Redirect stderr to stdout</label>
-                    </div>
-                </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Layout: Split Code on Left, Console on Right -->
+    <main class="workspace-split" aria-label="IDE Editor and Console Workspace">
+      
+      <!-- Left Panel: Monaco Code Editor with File Tabs -->
+      <section class="editor-panel-gfg" aria-label="Code Editor Panel">
+        <div class="editor-tabs-bar" role="tablist">
+          <div class="tabs-list" id="tabs-container">
+            <!-- Active tabs rendered programmatically -->
+          </div>
+          <button id="add-file-tab-btn" class="tab-add-btn" title="Add new class file (.java)">
+            <i data-lucide="plus"></i>
+          </button>
+        </div>
+        <div id="editor-target"></div>
+      </section>
+
+      <!-- Right Panel: Stacked Custom Input and Console Output -->
+      <section class="console-panel-gfg" aria-label="Console Input and Output Panel">
+        
+        <!-- Top Half: Custom Input (stdin) -->
+        <div class="stdin-pane">
+          <div class="pane-header">
+            <span>Custom Input (Stdin)</span>
+          </div>
+          <textarea id="stdin-textarea" class="stdin-textarea" placeholder="Type standard input here before running..."></textarea>
+        </div>
+
+        <!-- Bottom Half: Console Output (stdout/stderr) -->
+        <div class="stdout-pane">
+          <div class="pane-header">
+            <span>Output Console</span>
+            <div class="pane-meta">
+              <div id="run-stats" class="stats-group-gfg">
+                <div class="stat-item">Time: <span id="stat-time">-</span></div>
+                <div class="stat-item">Memory: <span id="stat-mem">-</span></div>
+              </div>
+              <button id="clear-console-btn" class="pane-clear-btn" title="Clear Console">
+                <i data-lucide="rotate-ccw"></i>
+              </button>
             </div>
+          </div>
+          <div id="stdout-terminal" class="stdout-terminal empty">
+            Press "Run Code" to compile and execute Java code...
+          </div>
         </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ----------------- MODALS ----------------- -->
+
+  <!-- Add File Modal -->
+  <div id="add-file-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="add-file-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="add-file-title" class="modal-title">New Java File</h2>
+        <button class="modal-close close-modal-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-group">
+          <label class="settings-label" for="new-file-name">Class / File Name</label>
+          <input type="text" id="new-file-name" class="settings-input" placeholder="e.g. Solution or Solution.java">
+          <p class="settings-desc">Name must start with an uppercase letter and be a valid Java identifier.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn cancel close-modal-btn">Cancel</button>
+        <button id="confirm-add-file" class="modal-btn confirm">Create File</button>
+      </div>
     </div>
+  </div>
+
+  <!-- Rename File Modal -->
+  <div id="rename-file-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="rename-file-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="rename-file-title" class="modal-title">Rename File</h2>
+        <button class="modal-close close-modal-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-group">
+          <label class="settings-label" for="rename-file-name">New Name</label>
+          <input type="text" id="rename-file-name" class="settings-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn cancel close-modal-btn">Cancel</button>
+        <button id="confirm-rename-file" class="modal-btn confirm">Rename</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div id="delete-file-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-file-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="delete-file-title" class="modal-title">Delete File</h2>
+        <button class="modal-close close-modal-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete <strong id="delete-file-target"></strong>? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn cancel close-modal-btn">Cancel</button>
+        <button id="confirm-delete-file" class="modal-btn confirm" style="background: var(--accent-danger);">Delete File</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- ----------------- SCRIPTS ----------------- -->
+  <!-- CRITICAL LOAD ORDER: Non-conflicting global libraries load BEFORE Monaco loader to prevent define conflicts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.40.0/min/vs/loader.min.js"></script>
+  
+  <script src="judge.js"></script>
+  <script src="app.js" defer></script>
 </body>
-
 </html>
